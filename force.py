@@ -17,8 +17,3 @@ def force(p, x, y):
             fy = fy + h * (p[i] + p[i + 1]) / 2
 
     return fx, fy
-
-
-def getForce(dom, p, Qin):
-    fx, fy = 0, 0
-    return fx, fy

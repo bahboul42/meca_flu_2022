@@ -10,7 +10,7 @@ def pressure(dom, s, rho):
 
     g = 9.81
     c = 0
-    s = s.squared()
+    s = np.square(s)
 
     for i in range(0, row - 1):
         for j in range(0, col - 1):

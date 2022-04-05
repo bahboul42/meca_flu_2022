@@ -14,8 +14,3 @@ def circu(u, v, x, y):
     c = sum(circ)
 
     return c
-
-
-def getCircu(dom, u, v, h):
-    c = 0
-    return c

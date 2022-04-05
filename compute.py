@@ -2,87 +2,72 @@ import numpy as np
 
 
 def computecl(dom, h, Qin, f):
-
     row = np.size(dom, 0)
     col = np.size(dom, 1)
 
-    len_in = 0
-    lens_in = []
     k = 1
+    foo = 1
 
-    lens_in[1] = 0
+    intake = []
+    outtake = []
 
-    for j in range(2, col):
-        if dom[2, j] == 2:
-            len_in = len_in + 1
-            lens_in[k + 1] = k * h
+    intake.append(0)
+    outtake.append(0)
+
+    for j in range(1, col - 1):
+        if dom[1, j] == 2:
+            intake.append(k * h)
             k = k + 1
+        if dom[200, j] == 2:
+            outtake.append(foo * h)
+            foo = foo + 1
 
-    nodes_in = len_in
-    len_in = len_in * h - h
-    U_in = Qin / len_in
-
-    len_out = 0
-    lens_out = []
-    k = 1
-
-    lens_out[1] = 0
-
-    for j in range(2, col):
-        if dom[201, j] == 2:
-            len_out = len_out + 1
-            lens_out[k + 1] = k * h
-            k = k + 1
-
-    nodes_out = len_out
-    len_out = len_out * h - h
-    U_out = Qin / len_out
+    intake_len = len(intake) * h - h
+    outtake_len = len(outtake) * h - h
 
     CL = np.zeros((row, col))
     CL[:] = np.nan
 
-    for i in range(1, row):
-        for j in range(1, col):
+    for i in range(np.size(dom, 0)):
+        for j in range(np.size(dom, 1)):
             if dom[i, j] == 0 or dom[i, j] == 1:
                 CL[i, j] = 0
 
-    k = 1
-    i = 2
+    for j in range(1, col - 1):
+        if dom[1, j] == 2 and len(intake) - 1 > 0:
+            CL[1, j] = (Qin / intake_len) * intake.pop(0)
 
-    for j in range(2, col):
-        if dom[i, j] == 2:
-            if k <= nodes_in:
-                CL[i, j] = (Qin / len_in) * lens_in[k]
-                k = k + 1
+        if dom[200, j] == 2 and len(outtake) - 1 > 0:
+            CL[200, j] = (Qin / outtake_len) * outtake.pop(0)
 
-    CL[2:22, 14] = CL[2, 14]
-    CL[2:22, 39] = CL[2, 39]
+    CL[1:21, 13] = CL[1, 13]
+    CL[1:21, 38] = CL[1, 38]
 
-    CL[22, 2: 14] = CL[22, 14]
-    CL[22, 39: 51] = CL[22, 39]
+    CL[21, 1: 14] = CL[20, 13]
+    CL[21, 38: 51] = CL[20, 38]
 
-    CL[22: 181, 2] = CL[22, 2]
-    CL[22: 181, 51] = CL[22, 51]
+    CL[21: 181, 1] = CL[21, 1]
+    CL[21: 181, 50] = CL[21, 50]
 
-    CL[181, 2: 19] = CL[181, 2]
-    CL[181, 34: 51] = CL[181, 51]
+    CL[180, 1: 19] = CL[180, 1]
+    CL[180, 33: 51] = CL[180, 50]
 
-    CL[181: 201, 19] = CL[181, 19]
-    CL[181: 201, 34] = CL[181, 34]
-
-    k = 1
-    i = 201
-
-    for j in range(1, col):
-        if dom[i, j] == 2:
-            if k <= nodes_out:
-                CL[i, j] = (Qin / len_out) * lens_out[k]
-                k = k + 1
+    CL[180: 201, 18] = CL[180, 18]
+    CL[180: 201, 33] = CL[180, 33]
 
     if f > 0:
-        C = 0
-        cl = f * Qin + C
-        CL[36: 108, 11: 42] = cl
-        CL[37: 107, 12: 41] = 0
+        cl = f * Qin
+        CL[35: 108, 10: 42] = cl
+        CL[36: 107, 10: 41] = 0
 
-    return cl
+    return CL
+
+
+def computecircu(dom, u, v, h):
+    c = 0
+    return c
+
+
+def computeforce(dom, p, Qin):
+    fx, fy = 0, 0
+    return fx, fy
